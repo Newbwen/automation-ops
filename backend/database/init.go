@@ -1,20 +1,30 @@
 package database
 
 import (
-	"automation-ops/models"
+	"github.com/Newbwen/automation-ops/backend/models"
+	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"log"
+	"io/ioutil"
+	"strconv"
 )
 
 var DB *gorm.DB
 
-func InitDB() {
-	dsn := "user:password@tcp(127.0.0.1:3306)/automation_ops?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+func init() {
+	configFile, err := ioutil.ReadFile("config/mysql.yaml")
 	if err != nil {
-		log.Fatal("无法连接数据库: ", err)
+		panic(err)
 	}
-	db.AutoMigrate(&models.Host{})
-	DB = db
+	config := models.Config{}
+	err = yaml.Unmarshal(configFile, &config)
+	if err != nil {
+		panic(err)
+	}
+	dsn := config.Database.User + ":" + config.Database.Password + "@tcp(" + config.Database.Host + ":" + strconv.Itoa(int(config.Database.Port)) + ")/" + config.Database.Dbname + "?charset=utf8mb4&parseTime=True&loc=Local"
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic(err)
+	}
+
 }
