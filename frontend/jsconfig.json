@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "baseUrl": "./",
+    "moduleResolution": "node",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/components/HelloWorld.vue"  // 添加需要排除的路径
+  ]
+  // 注意：exclude 字段可以排除不需要编译的文件，比如 node_modules、dist、src/components/HelloWorld.vue 等。
+  
+}
+
