@@ -1,36 +1,28 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/Newbwen/automation-ops/backend/database"
-	"gorm.io/gorm"
+	"github.com/go-redis/redis/v8"
 )
 
-type User struct {
-	gorm.Model
-	Name    string `json:"name"`
-	Sex     string `json:"sex"`
-	Age     int    `json:"age"`
-	Tel     string `json:"tel"`
-	Address string `json:"address"`
+func AddForRedis(rdb *redis.Client, key string, value string) error {
+	err := rdb.Set(context.Background(), key, value, 0).Err()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func main() {
-	db := *database.DB
-	if db.Error != nil {
-		fmt.Println(db.Error)
-	}
-	var user User
-	if err := db.Where("id = ?", 7).First(&user).Error; err != nil {
-		fmt.Println(err)
+	rdb := database.RedisClient
+	if rdb == nil {
+		fmt.Println("Redis is not initialized")
 		return
 	}
-	result := map[string]interface{}{
-		"name":    user.Name,
-		"sex":     user.Sex,
-		"age":     user.Age,
-		"tel":     user.Tel,
-		"address": user.Address,
+	err := AddForRedis(rdb, "test", "test")
+	if err != nil {
+		fmt.Println(err)
 	}
-	fmt.Printf("name: %s, sex: %s, age: %d, tel: %s, address: %s", result["name"], result["sex"], result["age"], result["tel"], result["address"])
 }

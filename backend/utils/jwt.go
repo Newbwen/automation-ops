@@ -1,14 +1,15 @@
-package auth
+// middlewares/jwt.go
+package utils
 
 import (
-	"github.com/Newbwen/automation-ops/backend/models"
+	"github.com/Newbwen/automation-ops/backend/config"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"strings"
 )
 
-// JWTAuth 验证 JWT 令牌
+// JWTAuth JWT 认证中间件
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 从 Authorization 头获取令牌（格式：Bearer <token>）
@@ -31,7 +32,7 @@ func JWTAuth() gin.HandlerFunc {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, jwt.ErrSignatureInvalid
 			}
-			return []byte(models.AppConfig.JWTSecret), nil
+			return []byte(config.AppConfig.JWTSecret), nil
 		})
 
 		// 处理验证错误
@@ -42,7 +43,7 @@ func JWTAuth() gin.HandlerFunc {
 
 		// 提取声明信息并存入上下文
 		if claims, ok := token.Claims.(jwt.MapClaims); ok {
-			c.Set("userID", claims["userID"]) // 用户ID将在后续处理中使用
+			c.Set("id", claims["id"]) // 用户ID将在后续处理中使用
 		} else {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "无效的令牌声明"})
 			return

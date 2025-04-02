@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/Newbwen/automation-ops/backend/controllers"
+	"github.com/Newbwen/automation-ops/backend/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,16 +20,18 @@ func SetupRoutes() *gin.Engine {
 		}
 		c.Next()
 	})
+
 	// 认证路由组
 	authGroup := r.Group("/")
 	{
 		// 开放端点
+		//authGroup.GET("/api/captcha", controllers.GenerateCaptcha)
 		authGroup.POST("/register", controllers.RegisterUser) // 用户注册
 		authGroup.POST("/login", controllers.LoginUser)       // 用户登录
 
 		// 需要认证的端点
-		//authGroup.Use(jwt.)              // 应用 JWT 中间件
-		//authGroup.GET("/user", controllers.GetUser) // 获取当前用户信息
+		authGroup.Use(utils.JWTAuth())              // 应用 JWT 中间件
+		authGroup.GET("/user", controllers.GetUser) // 获取当前用户信息
 	}
 
 	return r

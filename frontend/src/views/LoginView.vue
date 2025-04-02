@@ -86,10 +86,14 @@ export default {
     handleLogin() {
       if (this.validateForm()) {
         this.$axios.post('/api/login', this.form)
-          .then(response => {
-            localStorage.setItem('authToken', response.data.token)
-            this.$router.push('/')
-          })
+        .then(response => {
+          localStorage.setItem('authToken', response.data.token)
+          //跳转到欢迎页
+          this.$router.push({ 
+          name: 'welcome',
+          params: { freshLogin: true } // 可选参数，用于显示欢迎提示
+        })
+      })
           .catch(error => {
             // 明确处理不同错误类型
             if (error.response) {
