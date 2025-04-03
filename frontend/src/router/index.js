@@ -12,6 +12,10 @@ const router = createRouter({
         requiresAuth: false //明确标记不需要登录即可访问的页面
       }
     },
+    {path: '/index',
+      name: 'index',
+      component: () => import('../views/IndexView.vue')
+    },
     {
       path: '/hosts',
       name: 'hosts',
@@ -47,6 +51,14 @@ const router = createRouter({
       path:'/ver',
       name:'ver',
       component: () => import('../views/VerView.vue')
+    },
+    {
+      path: '/user/profile',
+      name: 'user-profile',
+      component: () => import('../views/UserProfileView.vue'),
+      meta: {
+        requiresAuth: true //需要登录才能访问的页面
+      }
     }
   ]
 })

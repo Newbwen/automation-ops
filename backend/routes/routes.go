@@ -33,6 +33,7 @@ func SetupRoutes() *gin.Engine {
 		authGroup.Use(utils.JWTAuth())                                 // 应用 JWT 中间件
 		authGroup.GET("/user", controllers.GetUser)                    // 获取当前用户信息
 		authGroup.POST("/change-password", controllers.ChangePassword) // 修改密码
+		authGroup.GET("/user/profile", controllers.UserInfo)
 	}
 
 	return r

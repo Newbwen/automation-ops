@@ -13,7 +13,7 @@
           <i class="bi bi-person-circle me-1"></i> 个人中心
         </button>
         <ul class="dropdown-menu" aria-labelledby="userDropdown">
-          <li><router-link class="dropdown-item" to="/profile">个人信息</router-link></li>
+          <li><router-link class="dropdown-item" to="/user/profile">个人信息</router-link></li>
           <li><hr class="dropdown-divider" /></li>
           <li><a class="dropdown-item" href="#" @click.prevent="openChangePassword">修改密码</a></li>
           <li><a class="dropdown-item" href="#" @click.prevent="logout">退出登录</a></li>

@@ -186,3 +186,33 @@ func ChangePassword(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "密码修改成功"})
 
 }
+
+// 用户信息
+func UserInfo(c *gin.Context) {
+	// 从请求头中获取token
+	userID, exists := c.Get("id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证的用户"})
+		return
+	}
+
+	// 查询用户信息
+	var user models.Users
+	if err := database.DB.Select("id", "username", "email", "role_id", "created_at", "last_login").Where("id = ?", userID).First(&user).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "用户不存在"})
+		return
+	}
+	// 查询角色信息
+	var role models.Role
+	if err := database.DB.Select("name").Where("id = ?", user.RoleID).First(&role).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "角色不存在"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"username":   user.Username,
+		"email":      user.Email,
+		"role":       role.Name,
+		"created_at": user.CreatedAt.Format("2006-01-02 15:04:05"),
+		"last_login": user.LastLogin.Format("2006-01-02 15:04:05"),
+	})
+}
