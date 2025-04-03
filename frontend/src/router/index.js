@@ -15,6 +15,11 @@ const router = createRouter({
     {
       path: '/hosts',
       name: 'hosts',
+      component: () => import('../views/HostsView.vue')
+    },
+    {
+      path: '/hosts',
+      name: 'hosts',
       component: () => import('../views/HostsView.vue'),
       meta: {
         requiresAuth: true //需要登录才能访问的页面

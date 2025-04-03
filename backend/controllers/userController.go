@@ -133,3 +133,56 @@ func GetUser(c *gin.Context) {
 	})
 
 }
+
+// 修改密码
+func ChangePassword(c *gin.Context) {
+	// 从请求头中获取token
+	userID, exists := c.Get("id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "未认证的用户"})
+		return
+	}
+
+	// 接收参数
+	var input struct {
+		OldPassword     string `json:"old_password" binding:"required"`
+		NewPassword     string `json:"new_password" binding:"required"`
+		ConfirmPassword string `json:"confirm_password" binding:"required"`
+	}
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "请求参数错误: " + err.Error()})
+		return
+	}
+
+	// 查询用户信息
+	var user models.Users
+	if err := database.DB.Where("id = ?", userID).First(&user).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "用户不存在"})
+		return
+	}
+
+	// 验证旧密码是否正确
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.OldPassword)); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "旧密码错误"})
+		return
+	}
+	// 验证新密码是否一致
+	if input.NewPassword != input.ConfirmPassword {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "新密码不一致"})
+		return
+	}
+
+	// 更新密码
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "更新密码失败"})
+		return
+	}
+	user.Password = string(hashedPassword)
+	if err := database.DB.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "更新密码失败"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "密码修改成功"})
+
+}
