@@ -48,11 +48,6 @@ const router = createRouter({
       component: () => import('../views/RegisterView.vue')
     },
     {
-      path:'/ver',
-      name:'ver',
-      component: () => import('../views/VerView.vue')
-    },
-    {
       path: '/user/profile',
       name: 'user-profile',
       component: () => import('../views/UserProfileView.vue'),

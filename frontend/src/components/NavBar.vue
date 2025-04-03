@@ -30,6 +30,34 @@
       </div>
     </div>
   </nav>
+  <!-- 主体布局 -->
+  <div class="d-flex flex-grow-1">
+      <!-- 左侧菜单，只有用户登录后才显示 -->
+      <div v-if="isLoggedIn" :class="['bg-light', {'d-none': !menuVisible}, 'p-3', 'menu', 'min-vh-100', 'border-end']">
+        <ul class="nav flex-column">
+          <li class="nav-item" v-for="(menu, index) in menuList" :key="index">
+            <router-link :to="menu.link" class="btn btn-link">
+              {{ menu.name }}
+            </router-link>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 分割线，点击切换左侧菜单显示/隐藏 -->
+      <div
+        class="bg-dark d-flex justify-content-center align-items-center"
+        style="cursor: pointer; width: 5px; height: 100vh;"
+        @click="toggleMenu"
+      >
+        <span class="text-white" style="font-size: 20px;">&#9776;</span>
+      </div>
+
+      <!-- 右侧内容区域 -->
+      <div class="flex-fill p-3">
+        <!-- 路由视图，根据路由渲染不同内容 -->
+        <router-view />
+      </div>
+    </div>
 
   <!-- 修改密码模态框 -->
   <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
@@ -70,10 +98,29 @@ export default {
       isLoggedIn: !!localStorage.getItem('authToken'),
       oldPassword: '',
       newPassword: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      menuVisible: true,  //根据登录状态决定左侧菜单是否显示
+      menuList: [
+        { name: '仪表盘', link: '/home' },
+        { name: '主机管理', link: '/function1' },
+        { name: '任务调度', link: '/function2' },
+        { name: '日志管理', link: '/settings' },
+        { name: '权限管理', likn : '/user'},
+      ],
     };
   },
+  created() {
+    // 页面加载时检查登录状态
+    this.checkLoginStatus();
+  },
   methods: {
+    toggleMenu() {
+      this.menuVisible = !this.menuVisible; // 切换菜单显示/隐藏
+    },
+    checkLoginStatus() {
+      // 检查是否登录
+      this.isLoggedIn = !!localStorage.getItem('authToken');
+    },
     // 打开修改密码模态框
     openChangePassword() {
       const modal = new Modal(document.getElementById('changePasswordModal'));
@@ -120,5 +167,44 @@ export default {
 /* 调整下拉菜单样式 */
 .dropdown-toggle::after {
   margin-left: 0.5em;
+}
+.menu {
+  width: auto;
+  transition: width 0.3s ease;
+}
+
+.bg-dark {
+  background-color: #343a40;
+}
+
+.bg-light {
+  background-color: #f8f9fa;
+}
+
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.border-end {
+  border-right: 1px solid #ddd;
+}
+
+.nav-item a {
+  text-align: left;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px;
+  color: #007bff;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.nav-item a:hover {
+  background-color: #f1f1f1;
+}
+
+.flex-fill {
+  flex: 1;
 }
 </style>

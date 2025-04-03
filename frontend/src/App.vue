@@ -1,6 +1,6 @@
 <template>
+  <!--全局应用-->
   <NavBar />
-  <router-view />
 </template>
 
 <script>
