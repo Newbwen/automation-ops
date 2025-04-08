@@ -12,7 +12,7 @@ type InitProject struct {
 }
 
 func (i *InitProject) Init() {
-	DB.AutoMigrate(&models.Role{}, &models.Users{})
+	DB.AutoMigrate(&models.Role{}, &models.Users{}, &models.Host{})
 	createRole()
 	addUser()
 }

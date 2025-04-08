@@ -27,6 +27,7 @@
       <div class="navbar-nav">
         <router-link v-if="!isLoggedIn" class="nav-link" to="/login">登录</router-link>
         <router-link v-if="!isLoggedIn" class="nav-link" to="/register">注册</router-link>
+        
       </div>
     </div>
   </nav>
@@ -101,11 +102,11 @@ export default {
       confirmPassword: '',
       menuVisible: true,  //根据登录状态决定左侧菜单是否显示
       menuList: [
-        { name: '仪表盘', link: '/home' },
-        { name: '主机管理', link: '/function1' },
-        { name: '任务调度', link: '/function2' },
-        { name: '日志管理', link: '/settings' },
-        { name: '权限管理', likn : '/user'},
+        { name: '仪表盘--未完成', link: '/error' },
+        { name: '主机管理--进行中', link: '/host/list' },
+        { name: '任务调度--未完成', link: '/error' },
+        { name: '日志管理--未完成', link: '/error' },
+        { name: '权限管理--未完成', likn : '/error'},
       ],
     };
   },

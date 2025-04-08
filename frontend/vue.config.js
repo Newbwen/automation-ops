@@ -11,5 +11,12 @@ module.exports = {
         }
       }
     }
+
+},
+chainWebpack(config) {
+  config.plugin('html').tap(args => { // 修改htmlWebpackPlugin的title
+    args[0].title = 'automation-ops-web'
+    return args
+  })
 }
 }

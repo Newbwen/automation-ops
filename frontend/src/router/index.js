@@ -12,22 +12,22 @@ const router = createRouter({
         requiresAuth: false //明确标记不需要登录即可访问的页面
       }
     },
+    {
+      path: '/error',
+      name: 'error',
+      component: () => import('../views/errors/ErrorView.vue'),
+      meta: {
+        requiresAuth: false //需要登录才能访问的页面
+      }
+    },
     {path: '/index',
       name: 'index',
       component: () => import('../views/IndexView.vue')
     },
     {
-      path: '/hosts',
-      name: 'hosts',
-      component: () => import('../views/HostsView.vue')
-    },
-    {
-      path: '/hosts',
-      name: 'hosts',
-      component: () => import('../views/HostsView.vue'),
-      meta: {
-        requiresAuth: true //需要登录才能访问的页面
-      }
+      path: '/host/list',
+      name: 'listHost',
+      component: () => import('../views/hosts/ListView.vue')
     },
     {
       path: '/welcome',

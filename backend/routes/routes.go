@@ -35,6 +35,14 @@ func SetupRoutes() *gin.Engine {
 		authGroup.POST("/change-password", controllers.ChangePassword) // 修改密码
 		authGroup.GET("/user/profile", controllers.UserInfo)
 	}
+	//主机路由组
+	hostGroup := r.Group("/host")
+	{
+		hostGroup.GET("/list", controllers.GetHosts)
+		hostGroup.POST("/add", controllers.AddHost)
+		hostGroup.PUT("/edit/:id", controllers.EditHost)
+		hostGroup.DELETE("/delete/:id", controllers.DeleteHost)
+	}
 
 	return r
 }
